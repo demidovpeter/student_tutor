@@ -3,11 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-veulvbmnx8cl214-6k&vjx*@&kbkzgl#3f(@thpfyhy@n_5zm7'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'foo')
 
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', 1))
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', "127.0.0.1").split(" ")
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -39,8 +39,7 @@ ROOT_URLCONF = 'student_tutor.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'backend/templates']
-        ,
+        'DIRS': [BASE_DIR / 'backend/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,12 +65,6 @@ DATABASES = {
         "PORT": os.environ.get("SQL_PORT", 5432),
     },
 }
-# SQL_ENGINE=django.db.backends.postgresql
-# SQL_DATABASE=stats_dev_db
-# SQL_USER=postgres
-# SQL_PASSWORD=postgres
-# SQL_HOST=localhost
-# SQL_PORT=5432
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,9 +82,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -102,14 +92,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -148,4 +131,3 @@ GRAPHQL_JWT = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
