@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  backend:
+#    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    links:
+      - postgres:postgres
+    volumes:
+      - web-django:/usr/src/app
+      - web-static:/usr/src/app/static
+    env_file: ./backend/.env
+    environment:
+      DEBUG: 'true'
+    command: gunicorn student_tutor.wsgi:application -w 2 -b :8000
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file: ./frontend/.env
+    command: serve -s build -p 3000
+    ports:
+      - 3000:3000
+  nginx:
+#    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - web-static:/www/static
+    links:
+      - backend:backend
+    depends_on:
+      - frontend
+
+  postgres:
+#    restart: always
+    image: postgres:latest
+    env_file: .env.db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+volumes:
+  web-django:
+  web-static:
+  pgdata:

@@ -1,13 +1,17 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'foo')
 
-DEBUG = int(os.environ.get('DEBUG', 1))
+DEBUG = os.environ.get('DEBUG', 1)
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', "127.0.0.1").split(" ")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split()
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -93,6 +97,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -104,6 +109,7 @@ GRAPHENE = {
 }
 AUTH_USER_MODEL = 'student.CustomUser'
 CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:8000',
